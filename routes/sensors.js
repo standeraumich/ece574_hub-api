@@ -17,6 +17,7 @@ async function getData() {
 }
 
 async function getSensorLatest() {
+  const dataJson = {}
   const [row] = await pool.query(`
     SELECT a.*
     FROM \`sensors\` a
@@ -24,7 +25,10 @@ async function getSensorLatest() {
 		ON a.sensor = b.sensor AND a.created < b.created
     WHERE b.created is NULL;
     `)
-  return row
+  row.map((val, key) => (
+    dataJson[val.sensor] = val.data
+  ));
+  return dataJson
 }
 
 async function insertSensorData(sensor, data) {
