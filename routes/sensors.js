@@ -35,12 +35,27 @@ async function insertSensorData(sensor, data) {
   return result
 }
 
+/* GET latest sensor data. */
+router.get('/latest', async function (req, res, next) {
+  const sensorData = await getSensorLatest()
+  // res.json({
+  //   data: sensorData
+  // });
+  res.send(sensorData)
+});
+
 /* GET all sensor data. */
 router.get('/', async function (req, res, next) {
-  const sensorData = await getSensorLatest()
-  res.json({
-    data: sensorData
-  });
+  const sensorData = await getData()
+  res.send(sensorData)
 });
+
+/* POST sensor data entry */
+router.post('/', async function (req, res, next) {
+  const { sensor, data } = req.body
+  const sensorData = await insertSensorData(sensor, data)
+  res.status(201).send(sensorData)
+});
+
 
 module.exports = router;
